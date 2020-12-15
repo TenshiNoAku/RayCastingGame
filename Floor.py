@@ -11,7 +11,7 @@ floor = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-]
+]  # Карта
 wall_coords = []
 width, height = SIZE
 for numi, i in enumerate(floor):
@@ -20,7 +20,7 @@ for numi, i in enumerate(floor):
             wall_coords.append((WALL * numj, WALL * numi))
 
 
-def render(screen):
+def render(screen):  # Рисование карты
     for numi, i in enumerate(floor):
         for numj, j in enumerate(i):
             if j == 1:

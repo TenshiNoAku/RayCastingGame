@@ -19,6 +19,6 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
         player.movement()
-        clock.tick(FPS)
+        clock.tick(FPS)  # Установка ограничения FPS
         pygame.display.flip()
     pygame.quit()
