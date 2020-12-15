@@ -12,10 +12,10 @@ floor = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
+]  # Карта
 
 
-def render(screen):
+def render(screen):  # Рисование карты
     width, height = 100, 100
     wall = int(width / max(len(floor), len(floor[0])))
     for numi, i in enumerate(floor):

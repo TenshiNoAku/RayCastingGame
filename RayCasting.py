@@ -12,9 +12,9 @@ def raycast(screen):
 
     pygame.draw.circle(screen, (255, 0, 0), [x, y], 10)
     pygame.draw.aaline(screen, (255, 0, 0), [x, y],
-                       [x + RENDER_DISTANCE * cos, y + RENDER_DISTANCE * sin])
+                       [x + RENDER_DISTANCE * cos, y + RENDER_DISTANCE * sin])  # Рисование основного луча
     current_angle = player.angle + DELTA_ANGLE
-    for ray in range(RAY_NUMBER // 2 - 1):
+    for ray in range(RAY_NUMBER // 2 - 1):  # Рисование дополнительных луча
         n_rad = current_angle * math.pi / 180
         cos = math.cos(n_rad)
         sin = math.sin(n_rad)
