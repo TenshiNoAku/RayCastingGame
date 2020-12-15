@@ -1,6 +1,7 @@
 import math
 
-SIZE = width, height = 1280, 720
+SIZE = width, height = 1200, 800
+WALL = 100
 FPS = 60
 RENDER_DISTANCE = 600
 RAY_NUMBER = 100
