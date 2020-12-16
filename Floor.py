@@ -27,3 +27,6 @@ def render(screen):  # Рисование карты
             if j == 1:
                 pygame.draw.rect(screen, COLOR_GREEN,
                                  (WALL * numj, WALL * numi, WALL, WALL), 1)
+            if j == 0:
+                pygame.draw.rect(screen, COLOR_BLUE,
+                                 (WALL * numj, WALL * numi, WALL, WALL), 1)

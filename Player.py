@@ -38,3 +38,6 @@ class Player:
         if key[pygame.K_d]:
             self.y += cos * PLAYER_SPEED
             self.x -= sin * PLAYER_SPEED
+
+    def coord_player(self):
+        return (self.x // WALL, self.y // WALL)
