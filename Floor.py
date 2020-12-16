@@ -14,10 +14,11 @@ floor = [
 ]  # Карта
 wall_coords = []
 width, height = SIZE
-for numi, i in enumerate(floor):
-    for numj, j in enumerate(i):
+for numi, distance in enumerate(floor):
+    for numj, j in enumerate(distance):
         if j == 1:
             wall_coords.append((WALL * numj, WALL * numi))
+print(wall_coords)
 
 
 def render(screen):  # Рисование карты
