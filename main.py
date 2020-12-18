@@ -9,8 +9,6 @@ if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SIZE)
     running = True
-    start_pos_player = [400, 300]
-    grad_pos_player = 0
     clock = pygame.time.Clock()
     while running:
         raycast(screen)
