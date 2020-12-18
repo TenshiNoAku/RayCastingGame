@@ -10,10 +10,8 @@ class Player:
         self.angle = 0  # Угол на который повернут игрок
 
     def cos_sin_player(self):
-        self.angle = self.angle % 360
-        n_rad = self.angle * math.pi / 180
-        cos = math.cos(n_rad)
-        sin = math.sin(n_rad)
+        cos = math.cos(self.angle)
+        sin = math.sin(self.angle)
         return (cos, sin)
 
     def player_pos(self):  # Возвращение координат игрока
@@ -23,9 +21,9 @@ class Player:
         cos, sin = self.cos_sin_player()
         key = pygame.key.get_pressed()
         if key[pygame.K_RIGHT]:
-            self.angle += 1
+            self.angle += 0.02
         if key[pygame.K_LEFT]:
-            self.angle -= 1
+            self.angle -= 0.02
         if key[pygame.K_w]:
             self.y += sin * PLAYER_SPEED
             self.x += cos * PLAYER_SPEED
