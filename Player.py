@@ -21,9 +21,9 @@ class Player:
         cos, sin = self.cos_sin_player()
         key = pygame.key.get_pressed()
         if key[pygame.K_RIGHT]:
-            self.angle += 0.02
+            self.angle += 0.04
         if key[pygame.K_LEFT]:
-            self.angle -= 0.02
+            self.angle -= 0.04
         if key[pygame.K_w]:
             self.y += sin * PLAYER_SPEED
             self.x += cos * PLAYER_SPEED

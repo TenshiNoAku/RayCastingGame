@@ -11,7 +11,7 @@ class Render:
         self.font = pygame.font.SysFont('Arial', 36, bold=True)
 
     def background(self):
-        pygame.draw.rect(self.screen, COLOR_BLUE, (0, 0, SIZE[0], SIZE[1] // 2))
+        pygame.draw.rect(self.screen, COLOR_DARKSLATEGRAY, (0, 0, SIZE[0], SIZE[1] // 2))
         pygame.draw.rect(self.screen, COLOR_DARKGRAY, (0, SIZE[1] // 2, SIZE[0], SIZE[1] // 2))
 
     def world(self, player_pos, player_angle):

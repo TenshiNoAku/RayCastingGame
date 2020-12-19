@@ -40,7 +40,7 @@ def raycast(sc, player_pos, player_angle):
         depth *= math.cos(player_angle - cur_angle)
         depth += 1
         proj_height = min(int(PROJ_COEFF / depth),2 * SIZE[1])
-        c = 255 / (1 + depth * depth * 0.00002)
-        color = (c//3, c, c // 3)
+        c = 120 / (1 + depth * depth * 0.00002)
+        color = (c, c//2, c // 4)
         pygame.draw.rect(sc, color, (ray * SCALE, SIZE[1] // 2 - proj_height // 2, SCALE, proj_height))
         cur_angle += DELTA_ANGLE
