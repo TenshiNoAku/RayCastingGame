@@ -23,7 +23,7 @@ if __name__ == '__main__':
         render.background()
         render.world(player.player_pos(), player.angle)
         render.mini_map(player)
-        clock.tick(60)  # Установка ограничения FPS
+        clock.tick(600)  # Установка ограничения FPS
         pygame.display.flip()
         print(clock.get_fps())
     pygame.quit()

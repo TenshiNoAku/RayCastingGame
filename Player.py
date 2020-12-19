@@ -5,8 +5,8 @@ from Settings import *
 
 class Player:
     def __init__(self):
-        self.x = 400  # Позиция игрока по оси x
-        self.y = 300  # Позиция игрока по оси y
+        self.x = 150  # Позиция игрока по оси x
+        self.y = 150  # Позиция игрока по оси y
         self.angle = 0  # Угол на который повернут игрок
 
     def cos_sin_player(self):

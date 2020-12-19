@@ -24,5 +24,5 @@ class Render:
                                                                             map_y + 12 * math.sin(player.angle)), 2)
         pygame.draw.circle(self.mini_map_screen, COLOR_RED, (int(map_x), int(map_y)), 5)
         for x, y in wall_coords:
-            pygame.draw.rect(self.mini_map_screen, COLOR_GREEN, (x, y, MAP_WALL, MAP_WALL))
+            pygame.draw.rect(self.mini_map_screen, COLOR_GREEN, (x // 5, y // 5, MAP_WALL, MAP_WALL))
         self.screen.blit(self.mini_map_screen, MAP_POS)
