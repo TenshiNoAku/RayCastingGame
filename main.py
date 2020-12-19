@@ -4,7 +4,8 @@ from Settings import *
 from Player import *
 from Floor import *
 from RayCasting import *
-from Render import Drawing
+from Render import *
+
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SIZE)
@@ -12,16 +13,17 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
     player = Player()
     screen_map = pygame.Surface((SIZE[0] // 5, SIZE[1] // 5))
-    drawing = Drawing(screen,screen_map)
+    render = Render(screen, screen_map)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         player.movement()
 
-        drawing.background()
-        drawing.world(player.player_pos(), player.angle)
-        drawing.mini_map(player)
+        render.background()
+        render.world(player.player_pos(), player.angle)
+        render.mini_map(player)
         clock.tick(FPS)  # Установка ограничения FPS
         pygame.display.flip()
+        print(clock.get_fps())
     pygame.quit()
