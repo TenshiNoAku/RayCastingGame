@@ -1,6 +1,7 @@
 import math
 import pygame
 from Settings import *
+from Floor import *
 
 
 class Player:
@@ -8,6 +9,7 @@ class Player:
         self.x = 150  # Позиция игрока по оси x
         self.y = 150  # Позиция игрока по оси y
         self.angle = 0  # Угол на который повернут игрок
+        self.player_collise = pygame.Rect(self.x, self.y, 5, 5)
 
     def cos_sin_player(self):
         cos = math.cos(self.angle)
@@ -20,22 +22,33 @@ class Player:
     def movement(self):  # Управление игрока
         cos, sin = self.cos_sin_player()
         key = pygame.key.get_pressed()
+        rx = self.x
+        ry = self.y
         if key[pygame.K_RIGHT]:
             self.angle += 0.04
         if key[pygame.K_LEFT]:
             self.angle -= 0.04
         if key[pygame.K_w]:
-            self.y += sin * PLAYER_SPEED
-            self.x += cos * PLAYER_SPEED
+            ry += sin * PLAYER_SPEED
+            rx += cos * PLAYER_SPEED
+            self.check_collision(rx, ry, 'up')
         if key[pygame.K_s]:
-            self.y -= sin * PLAYER_SPEED
-            self.x -= cos * PLAYER_SPEED
+            ry -= sin * PLAYER_SPEED
+            rx -= cos * PLAYER_SPEED
+            self.check_collision(rx, ry, 'down')
         if key[pygame.K_a]:
-            self.y -= cos * PLAYER_SPEED
-            self.x += sin * PLAYER_SPEED
+            ry -= cos * PLAYER_SPEED
+            rx += sin * PLAYER_SPEED
+            self.check_collision(rx, ry, 'right')
         if key[pygame.K_d]:
-            self.y += cos * PLAYER_SPEED
-            self.x -= sin * PLAYER_SPEED
+            ry += cos * PLAYER_SPEED
+            rx -= sin * PLAYER_SPEED
+            self.check_collision(rx, ry, 'left')
+        self.player_collise = pygame.Rect(self.x - 5, self.y - 5, 5, 5)
+
+    def check_collision(self, x, y, storona):
+        if pygame.Rect.collidelist(pygame.Rect(x, y, 25, 25), wall_collise) == -1:
+            self.x, self.y = x, y
 
     def coord_player(self):
         return (self.x // WALL, self.y // WALL)

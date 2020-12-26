@@ -26,7 +26,7 @@ class Render:
         map_x, map_y = player.player_pos()[0] // 5, player.player_pos()[1] // 5
         pygame.draw.line(self.mini_map_screen, COLOR_BLUE, (map_x, map_y), (map_x + 12 * math.cos(player.angle),
                                                                             map_y + 12 * math.sin(player.angle)), 2)
-        pygame.draw.circle(self.mini_map_screen, COLOR_RED, (int(map_x), int(map_y)), 5)
+        pygame.draw.rect(self.mini_map_screen, COLOR_RED, (int(map_x), int(map_y),5,5))
         COLOR = COLOR_WHITE
         for x, y in wall_coords:
             if wall_texture[(x, y)] == '1':

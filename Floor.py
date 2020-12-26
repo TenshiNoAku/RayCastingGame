@@ -1,5 +1,6 @@
 import pygame
 from Settings import *
+
 floor = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
@@ -17,7 +18,7 @@ floor2 = [
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
     [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0,1, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
     [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
@@ -28,12 +29,13 @@ floor3 = [
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
     [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0,1, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
     [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 ]  # Карта
 wall_coords = []
+wall_collise = []
 wall_texture = {}
 width, height = SIZE
 for numi, distance in enumerate(floor):
@@ -41,16 +43,22 @@ for numi, distance in enumerate(floor):
         if j == 1:
             wall_texture[(WALL * numj, WALL * numi)] = '1'
             wall_coords.append((WALL * numj, WALL * numi))
+            wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL+2, WALL+2))
         elif j == 2:
             wall_texture[(WALL * numj, WALL * numi)] = '2'
             wall_coords.append((WALL * numj, WALL * numi))
+            wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL+2, WALL+2))
         elif j == 3:
             wall_texture[(WALL * numj, WALL * numi)] = '3'
             wall_coords.append((WALL * numj, WALL * numi))
+            wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL+2, WALL+2))
         elif j == 4:
             wall_texture[(WALL * numj, WALL * numi)] = '4'
             wall_coords.append((WALL * numj, WALL * numi))
-print(wall_coords)
+            wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL+2, WALL+2))
+print(wall_collise)
+
+
 def render(screen):  # Рисование карты
     for numi, i in enumerate(floor):
         for numj, j in enumerate(i):
