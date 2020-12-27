@@ -31,24 +31,28 @@ class Player:
         if key[pygame.K_w]:
             ry += sin * PLAYER_SPEED
             rx += cos * PLAYER_SPEED
-            self.check_collision(rx, ry, 'up')
+            self.check_collision(rx, ry)
         if key[pygame.K_s]:
             ry -= sin * PLAYER_SPEED
             rx -= cos * PLAYER_SPEED
-            self.check_collision(rx, ry, 'down')
+            self.check_collision(rx, ry)
         if key[pygame.K_a]:
             ry -= cos * PLAYER_SPEED
             rx += sin * PLAYER_SPEED
-            self.check_collision(rx, ry, 'right')
+            self.check_collision(rx, ry)
         if key[pygame.K_d]:
             ry += cos * PLAYER_SPEED
             rx -= sin * PLAYER_SPEED
-            self.check_collision(rx, ry, 'left')
+            self.check_collision(rx, ry)
         self.player_collise = pygame.Rect(self.x - 5, self.y - 5, 5, 5)
 
-    def check_collision(self, x, y, storona):
+    def check_collision(self, x, y):
         if pygame.Rect.collidelist(pygame.Rect(x, y, 25, 25), wall_collise) == -1:
             self.x, self.y = x, y
+        elif pygame.Rect.collidelist(pygame.Rect(self.x, y, 25, 25), wall_collise) == -1:
+            self.y = y
+        elif pygame.Rect.collidelist(pygame.Rect(x, self.y, 25, 25), wall_collise) == -1:
+            self.x = x
 
     def coord_player(self):
         return (self.x // WALL, self.y // WALL)
