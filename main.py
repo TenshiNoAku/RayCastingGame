@@ -5,7 +5,11 @@ from Player import *
 from Floor import *
 from RayCasting import *
 from Render import *
-
+mixer = pygame.mixer
+mixer.init()
+mixer.music.load('Data/Music/music1.mp3')
+mixer.music.set_volume(0.05)
+mixer.music.play()
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SIZE)
