@@ -40,8 +40,11 @@ def depth_v_poisk(x, oy, ox, sin_a, cos_a):
     return yv, depth_v
 
 
-def raycast(sc, player_pos, player_angle, texturs):
+def raycast(player, texturs):
+    player_pos = player.coord_player()
+    player_angle = player.player_angle()
     global yv, xh, depth_h, depth_v, texture_v, texture_h
+    walls = []
     ox, oy = player_pos
     xm, ym = mapping(ox, oy)
     cur_angle = player_angle - HALF_FOV
@@ -74,9 +77,12 @@ def raycast(sc, player_pos, player_angle, texturs):
 
         wall_column = texturs[texture_wall].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
-        sc.blit(wall_column, (ray * SCALE, (SIZE[1] - proj_height) // 2))
+        # sc.blit(wall_column, (ray * SCALE, (SIZE[1] - proj_height) // 2))
+        wall_pos = (ray * SCALE, (SIZE[1] - proj_height) // 2)
+        walls.append((depth, wall_column, wall_pos))
         # c = 120 / (1 + depth * depth * 0.00002)
         # color = (c, c//2, c // 4)
         # pygame.draw.rect(sc, color, (ray * SCALE, SIZE[1] // 2 - proj_height // 2, SCALE, proj_height))
 
         cur_angle += DELTA_ANGLE
+    return walls

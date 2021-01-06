@@ -8,6 +8,9 @@ class Player:
     def __init__(self):
         self.x = 150  # Позиция игрока по оси x
         self.y = 150  # Позиция игрока по оси y
+        self.z = 0
+        self.argument_parable = -40
+        self.jump = False
         self.angle = 0  # Угол на который повернут игрок
         self.player_collise = pygame.Rect(self.x, self.y, 5, 5)
 
@@ -18,6 +21,9 @@ class Player:
 
     def player_pos(self):  # Возвращение координат игрока
         return (self.x, self.y)
+
+    def player_angle(self):
+        return self.angle
 
     def movement(self):  # Управление игрока
         cos, sin = self.cos_sin_player()
@@ -44,6 +50,16 @@ class Player:
             ry += cos * PLAYER_SPEED
             rx -= sin * PLAYER_SPEED
             self.check_collision(rx, ry)
+        if key[pygame.K_SPACE] and not self.jump:
+            self.jump = True
+            self.argument_parable = -39
+        self.angle %= DOUBLE_PI
+        if self.jump:
+            self.z = self.argument_parable**2 * (-0.1) + 150
+            self.argument_parable += 2
+            if self.argument_parable > 39:
+                self.jump = False
+                self.z = 0
         self.player_collise = pygame.Rect(self.x - 5, self.y - 5, 5, 5)
 
     def check_collision(self, x, y):
@@ -56,3 +72,5 @@ class Player:
 
     def coord_player(self):
         return (self.x // WALL, self.y // WALL)
+    def z_player(self):
+        return self.z
