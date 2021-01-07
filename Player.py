@@ -10,6 +10,8 @@ class Player:
         self.y = 150  # Позиция игрока по оси y
         self.angle = 0  # Угол на который повернут игрок
         self.player_collise = pygame.Rect(self.x, self.y, 5, 5)
+        self.destruction = False
+        self.animation_count = 0
 
     def cos_sin_player(self):
         cos = math.cos(self.angle)
@@ -74,3 +76,4 @@ class Player:
                 del wall_collise[ind]
                 counter += 1
         return counter
+

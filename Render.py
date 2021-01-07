@@ -12,7 +12,14 @@ class Render:
         self.texturs = {'1': pygame.image.load('Data\Texture\stone1.jpg').convert(),
                         '2': pygame.image.load('Data\Texture\stone.jpg').convert(),
                         '3': pygame.image.load('Data\Texture\Ruby.jpg').convert(),
-                        '4': pygame.image.load('Data\Texture\CaveWall.jpg').convert()}
+                        '4': pygame.image.load('Data\Texture\CaveWall.jpg').convert(),
+                        'pickaxe_static': pygame.image.load('Data\Sprites\pickaxe.png').convert_alpha(),
+                        'pickaxe_frame_0': pygame.image.load('Data\Sprites\pickaxe_frame_0.png').convert_alpha(),
+                        'pickaxe_frame_1': pygame.image.load('Data\Sprites\pickaxe_frame_1.png').convert_alpha(),
+                        'pickaxe_frame_2': pygame.image.load('Data\Sprites\pickaxe_frame_2.png').convert_alpha(),
+                        'pickaxe_frame_3': pygame.image.load('Data\Sprites\pickaxe_frame_3.png').convert_alpha(),
+                        'pickaxe_frame_4': pygame.image.load('Data\Sprites\pickaxe_frame_4.png').convert_alpha(),
+                        'pickaxe_frame_5': pygame.image.load('Data\Sprites\pickaxe_frame_5.png').convert_alpha(),}
 
     def background(self):
         pygame.draw.rect(self.screen, COLOR_DARKSLATEGRAY, (0, 0, SIZE[0], SIZE[1] // 2))
@@ -21,6 +28,13 @@ class Render:
     def world(self, player_pos, player_angle):
         block_v, block_h = raycast(self.screen, player_pos, player_angle, self.texturs)
         return block_v, block_h
+
+    def HUD(self, player):
+        if not player.destruction:
+            self.screen.blit(self.texturs['pickaxe_static'], (0, 0))
+        else:
+            print(player.animation_count)
+            self.screen.blit(self.texturs[f'pickaxe_frame_{player.animation_count // 3}'], (0, 0))
 
     def mini_map(self, player):
         self.mini_map_screen.fill(COLOR_BLACK)
