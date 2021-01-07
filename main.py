@@ -21,28 +21,36 @@ if __name__ == '__main__':
     player = Player()
     screen_map = pygame.Surface((SIZE[0] // 5, SIZE[1] // 5))
     render = Render(screen, screen_map)
-    btn_run = pygame.Rect(400, 300, 400, 200)
-    COLOR_BTN = (255, 20, 40)
-    COLOR_PRESSET_BTN = (100, 40, 80)
-    current_color_btn = (255, 20, 40)
+    btn_play = pygame.Rect(400, 200, 400, 100)
+    btn_exit = pygame.Rect(400, 300, 400, 100)
+    texture_current_btn_play = render.texturs['btn_play']
+    texture_current_btn_exit = render.texturs['btn_exit']
     while menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 menu = False
                 running = False
             if event.type == pygame.MOUSEMOTION:
-                if btn_run.collidepoint(event.pos):
-                    current_color_btn = (100, 100, 80)
+                if btn_play.collidepoint(event.pos):
+                    texture_current_btn_play = render.texturs['btn_play_pressed']
                 else:
-                    current_color_btn = (150, 150, 130)
+                    texture_current_btn_play = render.texturs['btn_play']
+                if btn_exit.collidepoint(event.pos):
+                    texture_current_btn_exit = render.texturs['btn_exit_pressed']
+                else:
+                    texture_current_btn_exit = render.texturs['btn_exit']
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if btn_run.collidepoint(event.pos):
+                if btn_play.collidepoint(event.pos):
                     menu = False
+                if btn_exit.collidepoint(event.pos):
+                    menu = False
+                    running = False
             if event.type == pygame.KEYDOWN:
                 pass
-        screen.fill((255, 0, 0))
+        screen.blit(render.texturs['background_1'], (0, 0))
 
-        pygame.draw.rect(screen, current_color_btn, list(btn_run))
+        screen.blit(texture_current_btn_play, btn_play[:2])
+        screen.blit(texture_current_btn_exit, btn_exit[:2])
 
         clock.tick(600)  # Установка ограничения FPS
         print(clock.get_fps())

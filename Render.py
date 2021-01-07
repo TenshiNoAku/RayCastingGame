@@ -19,7 +19,14 @@ class Render:
                         'pickaxe_frame_2': pygame.image.load('Data\Sprites\pickaxe_frame_2.png').convert_alpha(),
                         'pickaxe_frame_3': pygame.image.load('Data\Sprites\pickaxe_frame_3.png').convert_alpha(),
                         'pickaxe_frame_4': pygame.image.load('Data\Sprites\pickaxe_frame_4.png').convert_alpha(),
-                        'pickaxe_frame_5': pygame.image.load('Data\Sprites\pickaxe_frame_5.png').convert_alpha(),}
+                        'pickaxe_frame_5': pygame.image.load('Data\Sprites\pickaxe_frame_5.png').convert_alpha(),
+                        'btn_play': pygame.image.load("Data\Texture\Button_play.png").convert_alpha(),
+                        'btn_play_pressed': pygame.image.load(r'Data\Texture\button_play_pressed.png').convert_alpha(),
+                        'btn_exit': pygame.image.load("Data\Texture\Button_exit.png").convert_alpha(),
+                        'btn_exit_pressed': pygame.image.load(r'Data\Texture\Button_exit_pressed.png').convert_alpha(),
+                        'background_1': pygame.image.load(r'Data\Backgrounds\main_menu.png').convert_alpha()
+
+        }
 
     def background(self):
         pygame.draw.rect(self.screen, COLOR_DARKSLATEGRAY, (0, 0, SIZE[0], SIZE[1] // 2))
