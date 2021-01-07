@@ -5,11 +5,13 @@ from Player import *
 from Floor import *
 from RayCasting import *
 from Render import *
+
 mixer = pygame.mixer
 mixer.init()
 mixer.music.load('Data/Music/music1.mp3')
 mixer.music.set_volume(0.05)
 mixer.music.play()
+counter = 0
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SIZE)
@@ -22,12 +24,18 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        player.movement()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_q:
+                    counter = player.destroy_block(block,counter)
+                if ruby_block not in wall_coords:
+                    print(f'Вы победили,потратив на это {counter} действий')
+                    running=False
 
+        player.movement()
         render.background()
-        render.world(player.player_pos(), player.angle)
+        block_v, block_h = render.world(player.player_pos(), player.angle)
+        block = player.block_check(block_v, block_h)
         render.mini_map(player)
         clock.tick(600)  # Установка ограничения FPS
         pygame.display.flip()
-        print(clock.get_fps())
     pygame.quit()

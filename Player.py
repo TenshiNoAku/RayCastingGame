@@ -56,3 +56,21 @@ class Player:
 
     def coord_player(self):
         return (self.x // WALL, self.y // WALL)
+
+    def block_check(self, block_v, block_h):
+        if block_v[0] < block_h[0] or block_v[1] < block_h[1] and 0 >= block_v[0] and 0 >= block_v[1]:
+            block = block_v
+        else:
+            block = block_h
+        return block
+
+    def destroy_block(self, block,counter):
+        if block in wall_coords:
+            x, y = self.player_pos()
+            dist = math.sqrt((x - block[0]) ** 2 + (y - block[1]) ** 2)
+            if block[0] > 0 and block[1] > 0 and block[0] < 1100 and block[1] < 700 and dist <= 200:
+                ind = wall_coords.index(block)
+                del wall_coords[ind]
+                del wall_collise[ind]
+                counter += 1
+        return counter

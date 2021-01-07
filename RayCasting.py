@@ -1,16 +1,16 @@
 import pygame
-from numba import njit
+# from numba import njit
 
 from Floor import *
 from Settings import *
 
 
-@njit(fastmath=True)
+# @njit(fastmath=True)
 def mapping(a, b):
     return (a // WALL) * WALL, (b // WALL) * WALL
 
 
-@njit(fastmath=True)
+# @njit(fastmath=True)
 def sin_cos(cur_angle):
     sin_a = math.sin(cur_angle)
     cos_a = math.cos(cur_angle)
@@ -19,7 +19,7 @@ def sin_cos(cur_angle):
     return sin_a, cos_a
 
 
-@njit(fastmath=True)
+# @njit(fastmath=True)
 def projection(player_angle, cur_angle, depth, offset):
     offset = int(offset) % WALL
     depth *= math.cos(player_angle - cur_angle)
@@ -27,21 +27,28 @@ def projection(player_angle, cur_angle, depth, offset):
     proj_height = min(int(PROJ_COEFF / depth), int(SIZE[1] * 2))
     return offset, proj_height
 
-@njit(fastmath=True)
+
+# @njit(fastmath=True)
 def depth_h_poisk(y, oy, ox, sin_a, cos_a):
     depth_h = (y - oy) / sin_a
     xh = ox + depth_h * cos_a
     return xh, depth_h
 
-@njit(fastmath=True)
+
+# @njit(fastmath=True)
 def depth_v_poisk(x, oy, ox, sin_a, cos_a):
     depth_v = (x - ox) / cos_a
     yv = oy + depth_v * sin_a
     return yv, depth_v
 
 
+def dele(ray, x, y):
+    if ray == 150:
+        return (x, y)
+
+
 def raycast(sc, player_pos, player_angle, texturs):
-    global yv, xh, depth_h, depth_v, texture_v, texture_h
+    global yv, xh, depth_h, depth_v, texture_v, texture_h, a
     ox, oy = player_pos
     xm, ym = mapping(ox, oy)
     cur_angle = player_angle - HALF_FOV
@@ -57,6 +64,8 @@ def raycast(sc, player_pos, player_angle, texturs):
                 texture_v = wall_texture[wall_v]
                 break
             x += dx * WALL
+        if ray == 149:
+            block_v = wall_v
 
         # horizontals
         y, dy = (ym + WALL, 1) if sin_a >= 0 else (ym, -1)
@@ -68,6 +77,8 @@ def raycast(sc, player_pos, player_angle, texturs):
                 break
             y += dy * WALL
 
+        if ray == 149:
+            block_h = wall_h
         # projection
         depth, offset, texture_wall = (depth_v, yv, texture_v) if depth_v < depth_h else (depth_h, xh, texture_h)
         offset, proj_height = projection(player_angle, cur_angle, depth, offset)
@@ -75,8 +86,5 @@ def raycast(sc, player_pos, player_angle, texturs):
         wall_column = texturs[texture_wall].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
         sc.blit(wall_column, (ray * SCALE, (SIZE[1] - proj_height) // 2))
-        # c = 120 / (1 + depth * depth * 0.00002)
-        # color = (c, c//2, c // 4)
-        # pygame.draw.rect(sc, color, (ray * SCALE, SIZE[1] // 2 - proj_height // 2, SCALE, proj_height))
-
         cur_angle += DELTA_ANGLE
+    return block_v, block_h
