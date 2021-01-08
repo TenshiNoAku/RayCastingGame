@@ -1,6 +1,5 @@
 import pygame
 import math
-from Settings import *
 from Player import *
 from Floor import *
 from RayCasting import *
