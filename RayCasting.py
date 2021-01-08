@@ -1,7 +1,6 @@
 import pygame
 # from numba import njit
 
-from Floor import *
 from Settings import *
 
 
@@ -47,7 +46,7 @@ def dele(ray, x, y):
         return (x, y)
 
 
-def raycast(sc, player_pos, player_angle, texturs):
+def raycast(sc, player_pos, player_angle, texturs, floor):
     global yv, xh, depth_h, depth_v, texture_v, texture_h, a
     ox, oy = player_pos
     xm, ym = mapping(ox, oy)
@@ -60,8 +59,8 @@ def raycast(sc, player_pos, player_angle, texturs):
         for i in range(0, SIZE[0], WALL):
             yv, depth_v = depth_v_poisk(x, oy, ox, sin_a, cos_a)
             wall_v = mapping(x + dx, yv)
-            if wall_v in wall_coords:
-                texture_v = wall_texture[wall_v]
+            if wall_v in floor.wall_coords:
+                texture_v = floor.wall_texture[wall_v]
                 break
             x += dx * WALL
         if ray == 149:
@@ -72,8 +71,8 @@ def raycast(sc, player_pos, player_angle, texturs):
         for i in range(0, SIZE[1], WALL):
             xh, depth_h = depth_h_poisk(y, oy, ox, sin_a, cos_a)
             wall_h = mapping(xh, y + dy)
-            if wall_h in wall_coords:
-                texture_h = wall_texture[wall_h]
+            if wall_h in floor.wall_coords:
+                texture_h = floor.wall_texture[wall_h]
                 break
             y += dy * WALL
 
