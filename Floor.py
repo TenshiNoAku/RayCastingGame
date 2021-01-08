@@ -150,29 +150,9 @@ class Floor:
         self.wall_coords = []
         self.wall_collise = []
         self.wall_texture = {}
-        width, height = SIZE
-        for numi, distance in enumerate(floor1):
-            for numj, j in enumerate(distance):
-                if j == 1:
-                    self.wall_texture[(WALL * numj, WALL * numi)] = '1'
-                    self.wall_coords.append((WALL * numj, WALL * numi))
-                    self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
-                elif j == 2:
-                    self.wall_texture[(WALL * numj, WALL * numi)] = '2'
-                    self.wall_coords.append((WALL * numj, WALL * numi))
-                    self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
-                elif j == 3:
-                    self.wall_texture[(WALL * numj, WALL * numi)] = '3'
-                    self.wall_coords.append((WALL * numj, WALL * numi))
-                    self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
-                    self.ruby_block = (numj * WALL, numi * WALL)
-                elif j == 4:
-                    self.wall_texture[(WALL * numj, WALL * numi)] = '4'
-                    self.wall_coords.append((WALL * numj, WALL * numi))
-                    self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
-                elif j == 's':
-                    self.spawn = (numj * WALL + 50, numi * WALL + 50)
+        self.update(1)
     def update(self, lvl):
+        self.walls = []
         self.wall_coords = []
         self.wall_collise = []
         self.wall_texture = {}
@@ -180,24 +160,69 @@ class Floor:
         for numi, distance in enumerate(eval(f'floor{lvl}')):
             for numj, j in enumerate(distance):
                 if j == 1:
+                    self.walls.append(Block((WALL * numj, WALL * numi), '1',
+                                            pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2)))
                     self.wall_texture[(WALL * numj, WALL * numi)] = '1'
                     self.wall_coords.append((WALL * numj, WALL * numi))
                     self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
                 elif j == 2:
+                    self.walls.append(Block((WALL * numj, WALL * numi), '2',
+                                            pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2)))
                     self.wall_texture[(WALL * numj, WALL * numi)] = '2'
                     self.wall_coords.append((WALL * numj, WALL * numi))
                     self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
                 elif j == 3:
+                    self.walls.append(Block((WALL * numj, WALL * numi), '3',
+                                            pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2), ruby=True))
                     self.wall_texture[(WALL * numj, WALL * numi)] = '3'
                     self.wall_coords.append((WALL * numj, WALL * numi))
                     self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
                     self.ruby_block = (numj * WALL, numi * WALL)
                 elif j == 4:
+                    self.walls.append(Block((WALL * numj, WALL * numi), '4',
+                                            pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2), destructibility=False))
+
                     self.wall_texture[(WALL * numj, WALL * numi)] = '4'
                     self.wall_coords.append((WALL * numj, WALL * numi))
                     self.wall_collise.append(pygame.Rect(WALL * numj, WALL * numi, WALL + 2, WALL + 2))
                 elif j == 's':
                     self.spawn = (numj * WALL + 50, numi * WALL + 50)
+    def checkout_block(self, wall):
+        check = False
+        for index, block in enumerate(self.walls):
+            if block.coords == wall:
+                check = True
+                break
+        return check, index
+
+    def search_ruby(self):
+        check = False
+        for block in self.walls:
+            if block.ruby:
+                check = True
+                break
+
+        return check
+
+    def search_wall_collise(self):
+        wall_collise = []
+        for block in self.walls:
+            wall_collise.append(block.collise)
+        return wall_collise
+
+
+
+class Block:
+    def __init__(self, coords, texture, collise, destructibility=True, ruby=False):
+        self.coords = self.x, self.y = coords
+        self.texture = texture
+        self.collise = collise
+        self.destructibility = destructibility
+        self.level_of_destruction = 0
+        self.ruby = ruby
+        self.start_destruction = 0
+
+
 
 
 

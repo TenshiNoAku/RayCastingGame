@@ -15,6 +15,7 @@ class Player:
         self.floor = floor
         self.counter = 0
 
+
     def cos_sin_player(self):
         cos = math.cos(self.angle)
         sin = math.sin(self.angle)
@@ -51,11 +52,11 @@ class Player:
         self.player_collise = pygame.Rect(self.x - 5, self.y - 5, 5, 5)
 
     def check_collision(self, x, y):
-        if pygame.Rect.collidelist(pygame.Rect(x, y, 25, 25), self.floor.wall_collise) == -1:
+        if pygame.Rect.collidelist(pygame.Rect(x, y, 25, 25), self.floor.search_wall_collise()) == -1:
             self.x, self.y = x, y
-        elif pygame.Rect.collidelist(pygame.Rect(self.x, y, 25, 25), self.floor.wall_collise) == -1:
+        elif pygame.Rect.collidelist(pygame.Rect(self.x, y, 25, 25), self.floor.search_wall_collise()) == -1:
             self.y = y
-        elif pygame.Rect.collidelist(pygame.Rect(x, self.y, 25, 25), self.floor.wall_collise) == -1:
+        elif pygame.Rect.collidelist(pygame.Rect(x, self.y, 25, 25), self.floor.search_wall_collise()) == -1:
             self.x = x
 
     def coord_player(self):
@@ -68,16 +69,16 @@ class Player:
             block = block_h
         return block
 
-    def destroy_block(self, block,counter):
-        if block in self.floor.wall_coords:
+    def destroy_block(self, block):
+        check, index = self.floor.checkout_block(block)
+        block = self.floor.walls[index]
+        if check and block.destructibility:
             x, y = self.player_pos()
-            dist = math.sqrt((x - block[0]) ** 2 + (y - block[1]) ** 2)
-            if block[0] > 0 and block[1] > 0 and block[0] < 1100 and block[1] < 700 and dist <= 200:
-                ind = self.floor.wall_coords.index(block)
-                del self.floor.wall_coords[ind]
-                del self.floor.wall_collise[ind]
-                counter += 1
-        return counter
+            dist = math.sqrt((x - block.x) ** 2 + (y - block.y) ** 2)
+            if block.x > 0 and block.y > 0 and block.x < 1100 and block.y < 700 and dist <= 200:
+                del self.floor.walls[index]
+                del self.floor.walls[index]
+                self.counter += 1
 
     def respawn(self):
         self.x, self.y = self.floor.spawn

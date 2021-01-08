@@ -26,6 +26,12 @@ class Render:
                         'btn_exit': pygame.image.load("Data\Texture\Button_exit.png").convert_alpha(),
                         'btn_exit_pressed': pygame.image.load(r'Data\Texture\Button_exit_pressed.png').convert_alpha(),
                         'Background_hud': pygame.transform.scale(pygame.image.load(r'Data\Texture\Background_hud.png').convert_alpha(), (300, 150)),
+                        'fracture_1': pygame.image.load(r"Data\Texture\Fractur\fractur_1.png").convert_alpha(),
+                        'fracture_2': pygame.image.load(r"Data\Texture\Fractur\fractur_2.png").convert_alpha(),
+                        'fracture_3': pygame.image.load(r"Data\Texture\Fractur\fractur_3.png").convert_alpha(),
+                        'fracture_4': pygame.image.load(r"Data\Texture\Fractur\fractur_4.png").convert_alpha(),
+                        'fracture_5': pygame.image.load(r"Data\Texture\Fractur\fractur_5.png").convert_alpha(),
+
                         'background_1': pygame.image.load(r'Data\Backgrounds\main_menu.png').convert_alpha()
 
         }

@@ -47,7 +47,7 @@ def dele(ray, x, y):
 
 
 def raycast(sc, player_pos, player_angle, texturs, floor):
-    global yv, xh, depth_h, depth_v, texture_v, texture_h, a
+    global yv, xh, depth_h, depth_v, texture_v, texture_h, a, destruction_v, destruction_h
     ox, oy = player_pos
     xm, ym = mapping(ox, oy)
     cur_angle = player_angle - HALF_FOV
@@ -59,8 +59,10 @@ def raycast(sc, player_pos, player_angle, texturs, floor):
         for i in range(0, SIZE[0], WALL):
             yv, depth_v = depth_v_poisk(x, oy, ox, sin_a, cos_a)
             wall_v = mapping(x + dx, yv)
-            if wall_v in floor.wall_coords:
-                texture_v = floor.wall_texture[wall_v]
+            checkout, index = floor.checkout_block(wall_v)
+            if checkout:
+                texture_v = floor.walls[index].texture
+                destruction_v = floor.walls[index].level_of_destruction
                 break
             x += dx * WALL
         if ray == 149:
@@ -71,19 +73,25 @@ def raycast(sc, player_pos, player_angle, texturs, floor):
         for i in range(0, SIZE[1], WALL):
             xh, depth_h = depth_h_poisk(y, oy, ox, sin_a, cos_a)
             wall_h = mapping(xh, y + dy)
-            if wall_h in floor.wall_coords:
-                texture_h = floor.wall_texture[wall_h]
+            checkout, index = floor.checkout_block(wall_h)
+            if checkout:
+                texture_h = floor.walls[index].texture
+                destruction_h = floor.walls[index].level_of_destruction
                 break
             y += dy * WALL
 
         if ray == 149:
             block_h = wall_h
         # projection
-        depth, offset, texture_wall = (depth_v, yv, texture_v) if depth_v < depth_h else (depth_h, xh, texture_h)
+        depth, offset, texture_wall, destruction = (depth_v, yv, texture_v, destruction_v) if depth_v < depth_h else (depth_h, xh, texture_h, destruction_h)
         offset, proj_height = projection(player_angle, cur_angle, depth, offset)
 
         wall_column = texturs[texture_wall].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
         sc.blit(wall_column, (ray * SCALE, (SIZE[1] - proj_height) // 2))
+        if destruction and destruction < 6:
+            wall_column = texturs[f'fracture_{destruction}'].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
+            wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
+            sc.blit(wall_column, (ray * SCALE, (SIZE[1] - proj_height) // 2))
         cur_angle += DELTA_ANGLE
     return block_v, block_h

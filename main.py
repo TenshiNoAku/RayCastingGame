@@ -4,6 +4,7 @@ from Player import *
 from Floor import *
 from RayCasting import *
 from Render import *
+import datetime
 
 mixer = pygame.mixer
 mixer.init()
@@ -54,14 +55,17 @@ if __name__ == '__main__':
         clock.tick(600)  # Установка ограничения FPS
         pygame.display.flip()
     while running:
+        block_v, block_h = render.world(player.player_pos(), player.angle)
+        block = player.block_check(block_v, block_h)
+        block_object = floor.walls[floor.checkout_block(block)[1]]
         key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         if key[pygame.K_q]:
-            player.counter = player.destroy_block(block, player.counter)
+            block_object = floor.walls[floor.checkout_block(block)[1]]
             player.destruction = True
-            if floor.ruby_block not in floor.wall_coords:
+            if not floor.search_ruby():
                 player.lvl += 1
                 if player.lvl > 10:
                     player.lvl = 1
@@ -72,7 +76,12 @@ if __name__ == '__main__':
         if player.destruction:
             player.animation_count += 1
             player.animation_count %= 16
+            if player.animation_count % 3 == 1:
+                block_object.level_of_destruction += 1
+                if block_object.level_of_destruction == 6:
+                    player.destroy_block(block)
         else:
+            block_object.level_of_destruction = 0
             player.animation_count = -1
 
         player.movement()
