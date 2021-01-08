@@ -62,7 +62,7 @@ class Player:
         return (self.x // WALL, self.y // WALL)
 
     def block_check(self, block_v, block_h):
-        if block_v[0] < block_h[0] or block_v[1] < block_h[1] and 0 >= block_v[0] and 0 >= block_v[1]:
+        if block_v[0] < block_h[0] or block_v[1] < block_h[1]:
             block = block_v
         else:
             block = block_h
@@ -81,5 +81,5 @@ class Player:
 
     def respawn(self):
         self.x, self.y = self.floor.spawn
-        self.counter = 0
+        #self.counter = 0
 

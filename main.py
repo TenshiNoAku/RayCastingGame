@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
         player.movement()
         render.background()
-        block_v, block_h = render.world(player.player_pos(), player.angle)
+        block_v, block_h = render. world(player.player_pos(), player.angle)
         block = player.block_check(block_v, block_h)
         render.HUD(player)
         render.mini_map(player)
