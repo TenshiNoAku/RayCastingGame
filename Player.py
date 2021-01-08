@@ -81,5 +81,5 @@ class Player:
 
     def respawn(self):
         self.x, self.y = self.floor.spawn
-        #self.counter = 0
+        self.counter = 0
 

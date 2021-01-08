@@ -58,15 +58,15 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                if floor.ruby_block not in floor.wall_coords:
-                    player.lvl += 1
-                    if player.lvl > 10:
-                        player.lvl = 1
-                    floor.update(player.lvl)
-                    player.respawn()
         if key[pygame.K_q]:
             player.counter = player.destroy_block(block, player.counter)
             player.destruction = True
+            if floor.ruby_block not in floor.wall_coords:
+                player.lvl += 1
+                if player.lvl > 10:
+                    player.lvl = 1
+                floor.update(player.lvl)
+                player.respawn()
         else:
             player.destruction = False
         if player.destruction:
