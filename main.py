@@ -54,34 +54,30 @@ if __name__ == '__main__':
         clock.tick(600)  # Установка ограничения FPS
         pygame.display.flip()
     while running:
+        key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    player.counter = player.destroy_block(block,player.counter)
-                    player.destruction = True
-
                 if floor.ruby_block not in floor.wall_coords:
                     player.lvl += 1
                     if player.lvl > 10:
                         player.lvl = 1
                     floor.update(player.lvl)
                     player.respawn()
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_q:
-                    player.destruction = False
-
+        if key[pygame.K_q]:
+            player.counter = player.destroy_block(block, player.counter)
+            player.destruction = True
+        else:
+            player.destruction = False
         if player.destruction:
             player.animation_count += 1
             player.animation_count %= 16
         else:
             player.animation_count = -1
 
-
         player.movement()
         render.background()
-        block_v, block_h = render. world(player.player_pos(), player.angle)
+        block_v, block_h = render.world(player.player_pos(), player.angle)
         block = player.block_check(block_v, block_h)
         render.HUD(player)
         render.mini_map(player)
