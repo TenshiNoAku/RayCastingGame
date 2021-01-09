@@ -73,10 +73,7 @@ class Player:
         check, index = self.floor.checkout_block(block)
         block = self.floor.walls[index]
         if check and block.destructibility:
-            x, y = self.player_pos()
-            dist = math.sqrt((x - block.x) ** 2 + (y - block.y) ** 2)
-            if block.x > 0 and block.y > 0 and block.x < 1100 and block.y < 700 and dist <= 200:
-                del self.floor.walls[index]
+            if block.x > 0 and block.y > 0 and block.x < 1100 and block.y < 700:
                 del self.floor.walls[index]
                 self.counter += 1
 

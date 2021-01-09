@@ -1,15 +1,15 @@
 import pygame
-# from numba import njit
+from numba import njit
 import math
 from Settings import *
 
 
-# @njit(fastmath=True)
+@njit(fastmath=True)
 def mapping(a, b):
     return (a // WALL) * WALL, (b // WALL) * WALL
 
 
-# @njit(fastmath=True)
+@njit(fastmath=True)
 def sin_cos(cur_angle):
     sin_a = math.sin(cur_angle)
     cos_a = math.cos(cur_angle)
@@ -18,7 +18,7 @@ def sin_cos(cur_angle):
     return sin_a, cos_a
 
 
-# @njit(fastmath=True)
+@njit(fastmath=True)
 def projection(player_angle, cur_angle, depth, offset):
     offset = int(offset) % WALL
     depth *= math.cos(player_angle - cur_angle)
@@ -27,14 +27,14 @@ def projection(player_angle, cur_angle, depth, offset):
     return offset, proj_height
 
 
-# @njit(fastmath=True)
+@njit(fastmath=True)
 def depth_h_poisk(y, oy, ox, sin_a, cos_a):
     depth_h = (y - oy) / sin_a
     xh = ox + depth_h * cos_a
     return xh, depth_h
 
 
-# @njit(fastmath=True)
+@njit(fastmath=True)
 def depth_v_poisk(x, oy, ox, sin_a, cos_a):
     depth_v = (x - ox) / cos_a
     yv = oy + depth_v * sin_a

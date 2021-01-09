@@ -62,7 +62,9 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        if key[pygame.K_q]:
+        x, y = player.player_pos()
+        dist = math.sqrt((x - block[0]) ** 2 + (y - block[1]) ** 2)
+        if key[pygame.K_q] and dist < 200:
             block_object = floor.walls[floor.checkout_block(block)[1]]
             player.destruction = True
             if not floor.search_ruby():
@@ -80,6 +82,7 @@ if __name__ == '__main__':
                 block_object.level_of_destruction += 1
                 if block_object.level_of_destruction == 6:
                     player.destroy_block(block)
+                    floor.wall_coords.remove(block)
         else:
             block_object.level_of_destruction = 0
             player.animation_count = -1
