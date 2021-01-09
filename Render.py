@@ -1,6 +1,6 @@
-import pygame
-from Settings import *
 from RayCasting import *
+from numba import njit
+
 
 
 class Render:
@@ -10,33 +10,47 @@ class Render:
         self.player = player
         self.mini_map_screen = screen_map
         self.font = pygame.font.SysFont('Arial', 36, bold=True)
-        self.texturs = {'1': pygame.image.load('Data\Texture\stone1.jpg').convert(),
-                        '2': pygame.image.load('Data\Texture\stone.jpg').convert(),
-                        '3': pygame.image.load('Data\Texture\Ruby.jpg').convert(),
-                        '4': pygame.image.load('Data\Texture\CaveWall.jpg').convert(),
-                        'pickaxe_static': pygame.image.load('Data\Sprites\pickaxe.png').convert_alpha(),
-                        'pickaxe_frame_0': pygame.image.load('Data\Sprites\pickaxe_frame_0.png').convert_alpha(),
-                        'pickaxe_frame_1': pygame.image.load('Data\Sprites\pickaxe_frame_1.png').convert_alpha(),
-                        'pickaxe_frame_2': pygame.image.load('Data\Sprites\pickaxe_frame_2.png').convert_alpha(),
-                        'pickaxe_frame_3': pygame.image.load('Data\Sprites\pickaxe_frame_3.png').convert_alpha(),
-                        'pickaxe_frame_4': pygame.image.load('Data\Sprites\pickaxe_frame_4.png').convert_alpha(),
-                        'pickaxe_frame_5': pygame.image.load('Data\Sprites\pickaxe_frame_5.png').convert_alpha(),
-                        'btn_play': pygame.image.load("Data\Texture\Button_play.png").convert_alpha(),
-                        'btn_play_pressed': pygame.image.load(r'Data\Texture\button_play_pressed.png').convert_alpha(),
-                        'btn_exit': pygame.image.load("Data\Texture\Button_exit.png").convert_alpha(),
+        self.texturs = {
+            '1': pygame.image.load(r'Data\Texture\stone1.jpg').convert(),
+                        '2': pygame.image.load(r'Data\Texture\stone.jpg').convert(),
+                        '3': pygame.image.load(r'Data\Texture\Ruby.jpg').convert(),
+                        '4': pygame.image.load(r'Data\Texture\CaveWall.jpg').convert(),
+                        'pickaxe_static': pygame.image.load(r'Data\Sprites\pickaxe.png').convert_alpha(),
+                        'pickaxe_frame_0': pygame.image.load(r'Data\Sprites\pickaxe_frame_0.png').convert_alpha(),
+                        'pickaxe_frame_1': pygame.image.load(r'Data\Sprites\pickaxe_frame_1.png').convert_alpha(),
+                        'pickaxe_frame_2': pygame.image.load(r'Data\Sprites\pickaxe_frame_2.png').convert_alpha(),
+                        'pickaxe_frame_3': pygame.image.load(r'Data\Sprites\pickaxe_frame_3.png').convert_alpha(),
+                        'pickaxe_frame_4': pygame.image.load(r'Data\Sprites\pickaxe_frame_4.png').convert_alpha(),
+                        'pickaxe_frame_5': pygame.image.load(r'Data\Sprites\pickaxe_frame_5.png').convert_alpha(),
+                        'black': pygame.image.load(r'Data\Texture\black.png').convert_alpha(),
+                        'btn_play': pygame.image.load(r"Data\Texture\Button_play.png").convert_alpha(),
+                        'btn_play_pressed': pygame.image.load(r'Data\Texture\Button_play_pressed.png').convert_alpha(),
+                        'btn_main_menu': pygame.image.load(r"Data\Texture\Button_main_menu.png").convert_alpha(),
+                        'btn_main_menu_pressed': pygame.image.load(r'Data\Texture\Button_main_menu_pressed.png').convert_alpha(),
+                        'btn_exit': pygame.image.load(r"Data\Texture\Button_exit.png").convert_alpha(),
                         'btn_exit_pressed': pygame.image.load(r'Data\Texture\Button_exit_pressed.png').convert_alpha(),
-                        'Background_hud': pygame.transform.scale(pygame.image.load(r'Data\Texture\Background_hud.png').convert_alpha(), (300, 150)),
-                        'fracture_1': pygame.image.load(r"Data\Texture\Fractur\fractur_1.png").convert_alpha(),
-                        'fracture_2': pygame.image.load(r"Data\Texture\Fractur\fractur_2.png").convert_alpha(),
-                        'fracture_3': pygame.image.load(r"Data\Texture\Fractur\fractur_3.png").convert_alpha(),
-                        'fracture_4': pygame.image.load(r"Data\Texture\Fractur\fractur_4.png").convert_alpha(),
-                        'fracture_5': pygame.image.load(r"Data\Texture\Fractur\fractur_5.png").convert_alpha(),
-
+                        'btn_settings': pygame.image.load(r"Data\Texture\Button_settings.png").convert_alpha(),
+                        'btn_settings_pressed': pygame.image.load(r'Data\Texture\Button_settings_pressed.png').convert_alpha(),
+                        'btn_next_level': pygame.image.load(r"Data\Texture\Button_next_level.png").convert_alpha(),
+                        'btn_next_level_pressed': pygame.image.load(r'Data\Texture\Button_next_level_pressed.png').convert_alpha(),
+                        'btn_off': pygame.image.load(r"Data\Texture\button_off.png").convert_alpha(),
+                        'btn_on': pygame.image.load(r"Data\Texture\button_on.png").convert_alpha(),
+                        'aim': pygame.image.load(r"Data\Texture\aim.png").convert_alpha(),
+                        'Background_hud': pygame.transform.scale(
+                            pygame.image.load(r'Data\Texture\Background_hud.png').convert_alpha(), (300, 150)),
+                        'fracture_1': pygame.image.load(r"Data\Texture\Fracture\fracture_1.png").convert_alpha(),
+                        'fracture_2': pygame.image.load(r"Data\Texture\Fracture\fracture_2.png").convert_alpha(),
+                        'fracture_3': pygame.image.load(r"Data\Texture\Fracture\fracture_3.png").convert_alpha(),
+                        'fracture_4': pygame.image.load(r"Data\Texture\Fracture\fracture_4.png").convert_alpha(),
+                        'fracture_5': pygame.image.load(r"Data\Texture\Fracture\fracture_5.png").convert_alpha(),
+                        'background_settings': pygame.image.load(
+                            r"Data\Texture\Background_settings.png").convert_alpha(),
+                        'background_inside_game_menu': pygame.image.load(
+                            r"Data\Texture\Background_inside_game_menu.png").convert_alpha(),
                         'background_1': pygame.image.load(r'Data\Backgrounds\main_menu.png').convert_alpha()
 
-        }
+                        }
         self.century_schoolbook = pygame.font.SysFont('Century Schoolbook', 25)
-
 
     def background(self):
         pygame.draw.rect(self.screen, COLOR_DARKSLATEGRAY, (0, 0, SIZE[0], SIZE[1] // 2))
@@ -57,7 +71,7 @@ class Render:
         self.screen.blit(self.texturs['Background_hud'], (0, 0))
         self.screen.blit(text_level, (20, 10))
         self.screen.blit(text_counter, (20, 30))
-
+        self.screen.blit(self.texturs['aim'], (HALF_WIDTH - 25, HALF_HEIGHT - 25))
 
     def mini_map(self, player):
         self.mini_map_screen.fill(COLOR_BLACK)

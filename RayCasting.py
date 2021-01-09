@@ -4,6 +4,7 @@ import math
 from Settings import *
 
 
+
 @njit(fastmath=True)
 def mapping(a, b):
     return (a // WALL) * WALL, (b // WALL) * WALL

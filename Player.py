@@ -14,6 +14,9 @@ class Player:
         self.lvl = 1
         self.floor = floor
         self.counter = 0
+        self.sens = 0.04
+        self.control = 'mouse'
+
 
 
     def cos_sin_player(self):
@@ -29,10 +32,7 @@ class Player:
         key = pygame.key.get_pressed()
         rx = self.x
         ry = self.y
-        if key[pygame.K_RIGHT]:
-            self.angle += 0.04
-        if key[pygame.K_LEFT]:
-            self.angle -= 0.04
+
         if key[pygame.K_w]:
             ry += sin * PLAYER_SPEED
             rx += cos * PLAYER_SPEED
@@ -49,7 +49,18 @@ class Player:
             ry += cos * PLAYER_SPEED
             rx -= sin * PLAYER_SPEED
             self.check_collision(rx, ry)
+
         self.player_collise = pygame.Rect(self.x - 5, self.y - 5, 5, 5)
+
+    def mousemotion(self, px):
+        if self.control == 'arrows':
+            key = pygame.key.get_pressed()
+            if key[pygame.K_RIGHT]:
+                self.angle += self.sens
+            if key[pygame.K_LEFT]:
+                self.angle -= self.sens
+        elif self.control == 'mouse':
+            self.angle += px / 4 * self.sens
 
     def check_collision(self, x, y):
         if pygame.Rect.collidelist(pygame.Rect(x, y, 25, 25), self.floor.search_wall_collise()) == -1:
@@ -73,6 +84,8 @@ class Player:
         check, index = self.floor.checkout_block(block)
         block = self.floor.walls[index]
         if check and block.destructibility:
+            x, y = self.player_pos()
+            dist = math.sqrt((x - block.x) ** 2 + (y - block.y) ** 2)
             if block.x > 0 and block.y > 0 and block.x < 1100 and block.y < 700:
                 del self.floor.walls[index]
                 self.counter += 1
@@ -80,4 +93,6 @@ class Player:
     def respawn(self):
         self.x, self.y = self.floor.spawn
         self.counter = 0
+
+
 

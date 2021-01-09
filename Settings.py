@@ -1,8 +1,7 @@
 import math
-import pygame
-
 
 SIZE = width, height = 1200, 800
+HALF_WIDTH, HALF_HEIGHT = width // 2, height // 2
 WALL = 100
 FPS = 60
 
@@ -33,5 +32,3 @@ COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)
 COLOR_DARKGRAY = (36, 37, 38)
 COLOR_DARKSLATEGRAY = (47, 79, 79)
-
-
