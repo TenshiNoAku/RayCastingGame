@@ -35,7 +35,11 @@ class Render:
                         'btn_next_level_pressed': pygame.image.load(r'Data\Texture\Button_next_level_pressed.png').convert_alpha(),
                         'btn_off': pygame.image.load(r"Data\Texture\button_off.png").convert_alpha(),
                         'btn_on': pygame.image.load(r"Data\Texture\button_on.png").convert_alpha(),
+                        'keyboard': pygame.image.load(r"Data\Texture\keyboard.png").convert_alpha(),
+                        'mouse_keyboard': pygame.image.load(r"Data\Texture\mouse_keyboard.png").convert_alpha(),
                         'aim': pygame.image.load(r"Data\Texture\aim.png").convert_alpha(),
+                        'line': pygame.image.load(r"Data\Texture\line.png").convert_alpha(),
+                        'circle': pygame.image.load(r"Data\Texture\circle.png").convert_alpha(),
                         'Background_hud': pygame.transform.scale(
                             pygame.image.load(r'Data\Texture\Background_hud.png').convert_alpha(), (300, 150)),
                         'fracture_1': pygame.image.load(r"Data\Texture\Fracture\fracture_1.png").convert_alpha(),

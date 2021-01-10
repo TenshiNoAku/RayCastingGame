@@ -1,19 +1,23 @@
+import sqlite3
+
 from Floor import *
 from Player import *
 from Render import *
-import sqlite3
 
 con = sqlite3.connect('Data/Data_Base/Game_db.sqlite')
 
 cur = con.cursor()
 
+background_music_volume = 0.01
+sound_volume = 0.02
+
 mixer = pygame.mixer
 mixer.init()
-sound = pygame.mixer.Sound('Data/Music/Stone_Destroy.mp3')
+sound_stone_destroy = pygame.mixer.Sound('Data/Music/Stone_Destroy.mp3')
 mixer.music.load('Data/Music/music1.mp3')
-mixer.music.set_volume(0.01)
+mixer.music.set_volume(background_music_volume)
 mixer.music.play()
-sound.set_volume(0.02)
+sound_stone_destroy.set_volume(-70)
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SIZE)
@@ -36,8 +40,15 @@ if __name__ == '__main__':
     btn_settings = pygame.Rect(400, 300, 400, 100)
     btn_exit = pygame.Rect(400, 400, 400, 100)
     btn_main_menu = pygame.Rect(400, 400, 400, 100)
-    btn_on_off = pygame.Rect(920, 275, 70, 40)
+    btn_on_off = pygame.Rect(565, 275, 70, 40)
     btn_exit_settings = pygame.Rect(1010, 175, 40, 40)
+    circle_volume_background = pygame.Rect(background_music_volume * 3 + 650, 375, 40, 40)
+    circle_volume_sound = pygame.Rect(sound_volume * 3 + 650, 475, 40, 40)
+    circle_sens = pygame.Rect(player.sens * 3 + 650, 575, 40, 40)
+
+    line_volume_background = pygame.Rect(650, 375, 40, 40)
+    line_volume_sound = pygame.Rect(650, 475, 40, 40)
+    line_sens = pygame.Rect(650, 575, 40, 40)
 
     background = render.texturs['background_1']
     texture_current_btn_play = render.texturs['btn_play']
@@ -46,6 +57,10 @@ if __name__ == '__main__':
     texture_current_btn_main_menu = render.texturs['btn_main_menu']
     texture_current_btn_next_level = render.texturs['btn_next_level']
     texture_current_btn_on_off = render.texturs['btn_on']
+    texture_keyboard = [pygame.transform.scale(render.texturs['keyboard'], (100, 100)),
+                        pygame.transform.scale(render.texturs['mouse_keyboard'], (100, 100))]
+    texture_circle = render.texturs['circle']
+    texture_line = render.texturs['line']
     player.control = cur.execute("""Select control from Settings""").fetchone()[0]
     if player.control == 'arrows':
         texture_current_btn_on_off = render.texturs['btn_on']
@@ -108,7 +123,7 @@ if __name__ == '__main__':
                     block_object.level_of_destruction += 1
                     if block_object.level_of_destruction == 6:
                         player.destroy_block(block)
-                        sound.play()
+                        sound_stone_destroy.play()
             else:
                 block_object.level_of_destruction = 0
                 player.animation_count = -1
@@ -208,6 +223,7 @@ if __name__ == '__main__':
                     running = False
                 # if event.type == pygame.MOUSEMOTION:
                 #
+
                 # if btn_play.collidepoint(event.pos):
                 #     texture_current_btn_play = render.texturs['btn_play_pressed']
                 # else:
@@ -220,20 +236,43 @@ if __name__ == '__main__':
                 #     texture_current_btn_main_menu = render.texturs['btn_main_menu_pressed']
                 # else:
                 #     texture_current_btn_main_menu = render.texturs['btn_main_menu']
+
+                mouse_buttons = pygame.mouse.get_pressed()
+
+                if mouse_buttons[0]:
+                    if circle_volume_background.collidepoint(event.pos):
+                        if (event.pos[0] - 650) / 300 >= 0 \
+                                and (event.pos[0] - 650) / 300 <= 1:
+                            circle_volume_background[0] = event.pos[0] - 20
+                            background_music_volume = (event.pos[0] - 650) / 300
+                            sound_stone_destroy.set_volume(sound_volume)
+                            mixer.music.set_volume(background_music_volume)
+
+                    if circle_volume_sound.collidepoint(event.pos):
+                        if (event.pos[0] - 650) / 300 >= 0 \
+                                and (event.pos[0] - 650) / 300 <= 1:
+                            circle_volume_sound[0] = event.pos[0] - 20
+                            sound_volume = (event.pos[0] - 650) / 300
+                            sound_stone_destroy.set_volume(sound_volume)
+
+                    if circle_sens.collidepoint(event.pos):
+                        if (event.pos[0] - 650) / 3000 >= 0.01 \
+                                and (event.pos[0] - 650) / 3000 <= 0.1:
+                            circle_sens[0] = event.pos[0] - 20
+                            player.sens = (event.pos[0] - 650) / 3000
+
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
+
                     if btn_on_off.collidepoint(event.pos):
                         if texture_current_btn_on_off == render.texturs['btn_on']:
                             texture_current_btn_on_off = render.texturs['btn_off']
-                            player.control = 'mouse'
+                            player.control = 'arrow'
                         else:
                             texture_current_btn_on_off = render.texturs['btn_on']
-                            player.control = 'arrows'
+                            player.control = 'mouse'
                     if btn_exit_settings.collidepoint(event.pos):
                         mode = last_mode
-                    # if btn_settings.collidepoint(event.pos):
-                    #     mode = 'settings'
-                    # if btn_main_menu.collidepoint(event.pos):
-                    #     mode = 'main_menu'
 
             pygame.mouse.set_visible(True)
             # Отрисовка заднего фона
@@ -245,8 +284,38 @@ if __name__ == '__main__':
             # Отрисовка рамки внутриигрового меню
             screen.blit(render.texturs['background_settings'], (150, 175))
 
-            # Отриовка кнопок внутригрового меню
+            # Отриовка кнопок настроек
+            screen.blit(texture_keyboard[0], (400, 245))
+            screen.blit(texture_keyboard[1], (700, 245))
             screen.blit(texture_current_btn_on_off, btn_on_off[:2])
+
+            text_volume_background = render.century_schoolbook.render(
+                f'Громкость фоновой музыки {round(background_music_volume * 100)}%', False, (51, 51, 51))
+            screen.blit(text_volume_background, (200, circle_volume_background[1]))
+            screen.blit(texture_line, line_volume_background[:2])
+            pygame.draw.circle(screen, (102, 102, 102),
+                               (circle_volume_background[0] + 20, circle_volume_background[1] + 20), 20)
+            pygame.draw.circle(screen, (0, 0, 0),
+                               (circle_volume_background[0] + 20, circle_volume_background[1] + 20), 20, 3)
+
+
+            text_volume_sound = render.century_schoolbook.render(
+                f'Громкость звуков {round(sound_volume * 100)}%', False, (51, 51, 51))
+            screen.blit(text_volume_sound, (200, circle_volume_sound[1]))
+            screen.blit(texture_line, line_volume_sound[:2])
+            pygame.draw.circle(screen, (102, 102, 102),
+                               (circle_volume_sound[0] + 20, circle_volume_sound[1] + 20), 20)
+            pygame.draw.circle(screen, (0, 0, 0),
+                               (circle_volume_sound[0] + 20, circle_volume_sound[1] + 20), 20, 3)
+
+            text_sens = render.century_schoolbook.render(
+                f'Чувствительность мыши {round(player.sens * 100)}', False, (51, 51, 51))
+            screen.blit(text_sens, (200, circle_sens[1]))
+            screen.blit(texture_line, line_sens[:2])
+            pygame.draw.circle(screen, (102, 102, 102),
+                               (circle_sens[0] + 20, circle_sens[1] + 20), 20)
+            pygame.draw.circle(screen, (0, 0, 0),
+                               (circle_sens[0] + 20, circle_sens[1] + 20), 20, 3)
 
             clock.tick(600)  # Установка ограничения FPS
             pygame.display.flip()
