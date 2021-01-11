@@ -44,7 +44,7 @@ if __name__ == '__main__':
     btn_exit_settings = pygame.Rect(1010, 175, 40, 40)
     circle_volume_background = pygame.Rect(background_music_volume * 3 + 650, 375, 40, 40)
     circle_volume_sound = pygame.Rect(sound_volume * 3 + 650, 475, 40, 40)
-    circle_sens = pygame.Rect(player.sens * 3 + 650, 575, 40, 40)
+    circle_sens = pygame.Rect(player.sens * 3000 + 650, 575, 40, 40)
 
     line_volume_background = pygame.Rect(650, 375, 40, 40)
     line_volume_sound = pygame.Rect(650, 475, 40, 40)
@@ -63,9 +63,9 @@ if __name__ == '__main__':
     texture_line = render.texturs['line']
     player.control = cur.execute("""Select control from Settings""").fetchone()[0]
     if player.control == 'arrows':
-        texture_current_btn_on_off = render.texturs['btn_on']
-    else:
         texture_current_btn_on_off = render.texturs['btn_off']
+    else:
+        texture_current_btn_on_off = render.texturs['btn_on']
     alpha_channal = 0
     alpha_channal_count = 1
     player.lvl = cur.execute("""Select Current_floor from Settings""").fetchone()[0]
@@ -87,6 +87,7 @@ if __name__ == '__main__':
                     player.lvl = 1
                 mode = 'splash_screen1'
                 floor.update(player.lvl)
+                result = player.counter
                 player.respawn()
                 background_insade_game_menu.blit(screen, (0, 0))
                 cur.execute(f"""UPDATE Settings SET Current_Floor = {player.lvl}""")
@@ -137,7 +138,6 @@ if __name__ == '__main__':
             if mode == 'inside_game_menu' or mode == 'splash_screen':
                 background_insade_game_menu.blit(screen, (0, 0))
                 last_mode = 'game'
-                # background = background_insade_game_menu
             clock.tick(600)  # Установка ограничения FPS
             pygame.display.flip()
         elif mode == 'main_menu':
@@ -162,6 +162,8 @@ if __name__ == '__main__':
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if btn_play.collidepoint(event.pos):
                         mode = 'game'
+                        pygame.mouse.set_pos(HALF_WIDTH, HALF_HEIGHT)
+
                     if btn_settings.collidepoint(event.pos):
                         mode = 'settings'
                         last_mode = 'main_menu'
@@ -169,8 +171,10 @@ if __name__ == '__main__':
                         running = False
                 if event.type == pygame.KEYDOWN:
                     pass
+
             screen.blit(background, (0, 0))
 
+            # Отрисовка кнопок меню
             screen.blit(texture_current_btn_play, btn_play[:2])
             screen.blit(texture_current_btn_settings, btn_settings[:2])
             screen.blit(texture_current_btn_exit, btn_exit[:2])
@@ -197,11 +201,11 @@ if __name__ == '__main__':
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if btn_play.collidepoint(event.pos):
                         mode = 'game'
+                        pygame.mouse.set_pos(HALF_WIDTH, HALF_HEIGHT)
                     if btn_settings.collidepoint(event.pos):
                         mode = 'settings'
                     if btn_main_menu.collidepoint(event.pos):
                         mode = 'main_menu'
-                        # background.blit(render.texturs['background_1'], (0, 0))
 
             pygame.mouse.set_visible(True)
             # Отрисовка заднего фона
@@ -221,53 +225,33 @@ if __name__ == '__main__':
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                # if event.type == pygame.MOUSEMOTION:
-                #
-
-                # if btn_play.collidepoint(event.pos):
-                #     texture_current_btn_play = render.texturs['btn_play_pressed']
-                # else:
-                #     texture_current_btn_play = render.texturs['btn_play']
-                # if btn_settings.collidepoint(event.pos):
-                #     texture_current_btn_settings = render.texturs['btn_settings_pressed']
-                # else:
-                #     texture_current_btn_settings = render.texturs['btn_settings']
-                # if btn_main_menu.collidepoint(event.pos):
-                #     texture_current_btn_main_menu = render.texturs['btn_main_menu_pressed']
-                # else:
-                #     texture_current_btn_main_menu = render.texturs['btn_main_menu']
 
                 mouse_buttons = pygame.mouse.get_pressed()
 
                 if mouse_buttons[0]:
                     if circle_volume_background.collidepoint(event.pos):
-                        if (event.pos[0] - 650) / 300 >= 0 \
-                                and (event.pos[0] - 650) / 300 <= 1:
+                        if 0 <= (event.pos[0] - 650) / 300 <= 1:
                             circle_volume_background[0] = event.pos[0] - 20
                             background_music_volume = (event.pos[0] - 650) / 300
                             sound_stone_destroy.set_volume(sound_volume)
                             mixer.music.set_volume(background_music_volume)
 
                     if circle_volume_sound.collidepoint(event.pos):
-                        if (event.pos[0] - 650) / 300 >= 0 \
-                                and (event.pos[0] - 650) / 300 <= 1:
+                        if 0 <= (event.pos[0] - 650) / 300 <= 1:
                             circle_volume_sound[0] = event.pos[0] - 20
                             sound_volume = (event.pos[0] - 650) / 300
                             sound_stone_destroy.set_volume(sound_volume)
 
                     if circle_sens.collidepoint(event.pos):
-                        if (event.pos[0] - 650) / 3000 >= 0.01 \
-                                and (event.pos[0] - 650) / 3000 <= 0.1:
+                        if 0.01 <= (event.pos[0] - 650) / 3000 <= 0.1:
                             circle_sens[0] = event.pos[0] - 20
                             player.sens = (event.pos[0] - 650) / 3000
 
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
-
                     if btn_on_off.collidepoint(event.pos):
-                        if texture_current_btn_on_off == render.texturs['btn_on']:
+                        if player.control == 'mouse':
                             texture_current_btn_on_off = render.texturs['btn_off']
-                            player.control = 'arrow'
+                            player.control = 'arrows'
                         else:
                             texture_current_btn_on_off = render.texturs['btn_on']
                             player.control = 'mouse'
@@ -281,7 +265,7 @@ if __name__ == '__main__':
             else:
                 screen.blit(background, (0, 0))
 
-            # Отрисовка рамки внутриигрового меню
+            # Отрисовка рамки настроек
             screen.blit(render.texturs['background_settings'], (150, 175))
 
             # Отриовка кнопок настроек
@@ -289,6 +273,7 @@ if __name__ == '__main__':
             screen.blit(texture_keyboard[1], (700, 245))
             screen.blit(texture_current_btn_on_off, btn_on_off[:2])
 
+            # Пункт настроек: Громкость фоновой музыки
             text_volume_background = render.century_schoolbook.render(
                 f'Громкость фоновой музыки {round(background_music_volume * 100)}%', False, (51, 51, 51))
             screen.blit(text_volume_background, (200, circle_volume_background[1]))
@@ -298,7 +283,7 @@ if __name__ == '__main__':
             pygame.draw.circle(screen, (0, 0, 0),
                                (circle_volume_background[0] + 20, circle_volume_background[1] + 20), 20, 3)
 
-
+            # Пункт настроек: Громкость игровых звуков
             text_volume_sound = render.century_schoolbook.render(
                 f'Громкость звуков {round(sound_volume * 100)}%', False, (51, 51, 51))
             screen.blit(text_volume_sound, (200, circle_volume_sound[1]))
@@ -308,6 +293,7 @@ if __name__ == '__main__':
             pygame.draw.circle(screen, (0, 0, 0),
                                (circle_volume_sound[0] + 20, circle_volume_sound[1] + 20), 20, 3)
 
+            # Пункт настроек: Чувтвительность мыши
             text_sens = render.century_schoolbook.render(
                 f'Чувствительность мыши {round(player.sens * 100)}', False, (51, 51, 51))
             screen.blit(text_sens, (200, circle_sens[1]))
@@ -346,11 +332,6 @@ if __name__ == '__main__':
                     if btn_exit_settings.collidepoint(event.pos):
                         mode = 'main_menu'
 
-                    # if btn_settings.collidepoint(event.pos):
-                    #     mode = 'settings'
-                    # if btn_main_menu.collidepoint(event.pos):
-                    #     mode = 'main_menu'
-
             pygame.mouse.set_visible(True)
             # Отрисовка заднего фона
             screen.blit(background, (0, 0))
@@ -362,6 +343,18 @@ if __name__ == '__main__':
             screen.blit(texture_current_btn_next_level, (btn_play[0], btn_play[1] + 100))
             screen.blit(texture_current_btn_main_menu, (btn_settings[0], btn_settings[1] + 100))
 
+            # Отрисовка результатов и рекорда
+            font_century_schoolbook_big = render.century_schoolbook
+            # font_century_schoolbook_big.size(40)
+
+            text_result = font_century_schoolbook_big.render(
+                f'Текущий результат {result}', False, (51, 51, 51))
+
+            text_record = font_century_schoolbook_big.render(
+                f'Рекорд {cur.execute(f"""Select floor_record{player.lvl - 1 if player.lvl > 1 else 10} from Record""").fetchone()[0]}', False, (51, 51, 51))
+
+            screen.blit(text_result, (200, 500))
+            screen.blit(text_record, (200, 600))
             clock.tick(600)  # Установка ограничения FPS
             pygame.display.flip()
         elif mode == 'splash_screen2':
@@ -387,11 +380,10 @@ if __name__ == '__main__':
             screen.blit(splash_screen, (0, 0))
             if alpha_channal < 1 and alpha_channal_count == -1:
                 mode = 'game'
+                pygame.mouse.set_pos(HALF_WIDTH, HALF_HEIGHT)
 
             clock.tick(600)  # Установка ограничения FPS
             pygame.display.flip()
-        # print(bool(texture_current_btn_on_off == render.texturs['btn_on']))
-        # print(player.control)
     cur.execute(f"""UPDATE Settings SET Control = '{player.control}'""")
     con.commit()
 pygame.quit()
