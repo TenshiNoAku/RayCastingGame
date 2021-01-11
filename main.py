@@ -50,6 +50,12 @@ if __name__ == '__main__':
     line_volume_sound = pygame.Rect(650, 475, 40, 40)
     line_sens = pygame.Rect(650, 575, 40, 40)
 
+    sound_volume = cur.execute("""Select Sound_Volume from Settings""").fetchone()[0]
+    background_music_volume = cur.execute("""Select Music_Volume from Settings""").fetchone()[0]
+    player.sens = cur.execute("""Select Sensitivity from Settings""").fetchone()[0]
+    mixer.music.set_volume(background_music_volume)
+    sound_stone_destroy.set_volume(sound_volume)
+
     background = render.texturs['background_1']
     texture_current_btn_play = render.texturs['btn_play']
     texture_current_btn_settings = render.texturs['btn_settings']
@@ -71,6 +77,7 @@ if __name__ == '__main__':
     player.lvl = cur.execute("""Select Current_floor from Settings""").fetchone()[0]
     floor.update(player.lvl)
     while running:
+
         if mode == 'game':
             if not floor.search_ruby():
                 if cur.execute(f"""Select floor_record{player.lvl} from Record""").fetchone()[0] > player.counter:
@@ -134,7 +141,7 @@ if __name__ == '__main__':
             block_v, block_h = render.world(player.player_pos(), player.angle)
             block = player.block_check(block_v, block_h)
             render.HUD(player)
-            render.mini_map(player)
+           # render.mini_map(player)
             if mode == 'inside_game_menu' or mode == 'splash_screen':
                 background_insade_game_menu.blit(screen, (0, 0))
                 last_mode = 'game'
@@ -348,10 +355,11 @@ if __name__ == '__main__':
             # font_century_schoolbook_big.size(40)
 
             text_result = font_century_schoolbook_big.render(
-                f'Текущий результат {result}', False, (51, 51, 51))
+                f'Текущий результат {result}', False, (0, 0, 0))
 
             text_record = font_century_schoolbook_big.render(
-                f'Рекорд {cur.execute(f"""Select floor_record{player.lvl - 1 if player.lvl > 1 else 10} from Record""").fetchone()[0]}', False, (51, 51, 51))
+                f'Рекорд {cur.execute(f"""Select floor_record{player.lvl - 1 if player.lvl > 1 else 10} from Record""").fetchone()[0]}',
+                False, (0, 0, 0))
 
             screen.blit(text_result, (200, 500))
             screen.blit(text_record, (200, 600))
@@ -385,5 +393,9 @@ if __name__ == '__main__':
             clock.tick(600)  # Установка ограничения FPS
             pygame.display.flip()
     cur.execute(f"""UPDATE Settings SET Control = '{player.control}'""")
+    cur.execute(f"""UPDATE Settings SET Control = '{player.control}'""")
+    cur.execute(f"""UPDATE Settings SET Sound_Volume = {sound_volume}""")
+    cur.execute(f"""UPDATE Settings SET Music_Volume = {background_music_volume}""")
+    cur.execute(f"""UPDATE Settings SET Sensitivity = {player.sens}""")
     con.commit()
 pygame.quit()
